@@ -10,6 +10,7 @@ public class EmployeeManager {
     public static void main(String[] args) {
         List<Employee> employeeList = new ArrayList<>();
         boolean check = true;
+        double totalSalary = 0;
 
         employeeList.add(new EmployeeFullTime(1,"Nam",18, "0952334333","nam@gmail.com",10000000));
         employeeList.add(new EmployeeFullTime(2,"Ngoc",28, "0952786878","ngoc@gmail.com",25000000));
@@ -22,10 +23,11 @@ public class EmployeeManager {
             System.out.printf("Nhập vào lựa chọn :%n" +
                     "1. Hiển thị toàn bộ danh sách. %n" +
                     "2. Thêm mới nhân viên. %n" +
-                    "3. Hiển thị danh sách nhân viên Fulltime có mức lương thấp hơn mức lương trung bình. %n" +
-                    "4. Hiển thị tổng lương phải trả cho tất cả nhân viên Parttime. %n" +
-                    "5. Hiển thị danh sách nhân viên Fulltime theo số lương tăng dần. %n" +
-                    "6. Thoát. %n"
+                    "3. Nhập tiền thưởng, tiền phạt, số giờ làm cho nhân viên %n" +
+                    "4. Hiển thị danh sách nhân viên Fulltime có mức lương thấp hơn mức lương trung bình. %n" +
+                    "5. Hiển thị tổng lương phải trả cho tất cả nhân viên Parttime. %n" +
+                    "6. Hiển thị danh sách nhân viên Fulltime theo số lương tăng dần. %n" +
+                    "7. Thoát. %n"
                     );
             Scanner scanner = new Scanner(System.in);
             int selection = scanner.nextInt();
@@ -39,32 +41,38 @@ public class EmployeeManager {
                     employeeManager.addEmployee(employeeList);
                     break;
                 case 3 :
-                    double totalSalary = employeeManager.calculatorSalary(employeeList);
-                    employeeManager.underAverageList(employeeList,totalSalary);
+                    totalSalary = employeeManager.calculatorSalary(employeeList);
                     break;
                 case 4 :
-                    double totalSalaryPartTime = employeeManager.totalSalaryPartTime(employeeList);
-                    System.out.print("Tổng lương phải trả cho tất cả nhân viên Parttime là : ");
-                    System.out.printf("%1$,.0f", totalSalaryPartTime);
-                    System.out.println();
+                    if (totalSalary != 0){
+                        employeeManager.underAverageList(employeeList,totalSalary);
+                    }else {
+                        System.out.println("Hãy nhập tiền thưởng, tiền phạt, số giờ làm cho nhân viên trước.");
+                    }
                     break;
-                case 5:
+                case 5 :
+                    double totalSalaryPartTime = employeeManager.totalSalaryPartTime(employeeList);
+                    if (totalSalaryPartTime != 0){
+                        System.out.print("Tổng lương phải trả cho tất cả nhân viên Parttime là : ");
+                        System.out.printf("%1$,.0f", totalSalaryPartTime);
+                        System.out.print(" Đồng");
+                        System.out.println();
+                    }else {
+                        System.out.println("Hãy nhập tiền thưởng, tiền phạt, số giờ làm cho nhân viên trước.");
+                    }
+
+                    break;
+                case 6:
                     List<EmployeeFullTime> fullTimeList = employeeManager.sortFullTimeForSalary(employeeList);
                     for (EmployeeFullTime employeeFullTime : fullTimeList){
                         System.out.println(employeeFullTime.toString());
                     }
                     break;
-                case 6 :
+                case 7 :
                     check = false;
-                    //System.exit(0);
                     break;
-
             }
         }while (check);
-
-
-        double totalSalaryPartTime = employeeManager.totalSalaryPartTime(employeeList);
-
 
     }
 
@@ -139,14 +147,9 @@ public class EmployeeManager {
         }
     }
     public double totalSalaryPartTime(List<Employee> employeeList){
-        Scanner scanner = new Scanner(System.in);
         double totalSalaryPartTime = 0;
         for (Employee employee : employeeList){
             if (employee instanceof EmployeePartTime){
-                int workTime;
-                System.out.println("Nhap vao so gio lam cua nhan vien "+ employee.getId() + " : ");
-                workTime = scanner.nextInt();
-                ((EmployeePartTime) employee).setWorkTime(workTime);
                 totalSalaryPartTime += ((EmployeePartTime) employee).getRealSalary();
             }
         }

@@ -36,12 +36,13 @@ public class EmployeeFullTime extends Employee {
     }
 
     public double realSalary(){
-        return salary - (bonus - forfeit);
+        return salary + (bonus - forfeit);
     }
 
     @Override
     public String toString() {
-        return "EmployeeFullTime{ "+ super.toString() + " bonus= " + bonus + ", forfeit= " + forfeit + ", salary = " + salary + '}';
+        String salaryFormat = String.format("%1$,.0f",salary);
+        return "EmployeeFullTime{ "+ super.toString() + " bonus= " + bonus + ", forfeit= " + forfeit + ", salary = " + salaryFormat + '}';
     }
 }
 
